@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import audioController from "../../utils/AudioController"; // adapte le chemin si nécessaire
+import audioController from "../../utils/AudioController"; 
 
 export default class AnymaStyle {
   constructor() {
@@ -7,8 +7,8 @@ export default class AnymaStyle {
     this.count = 0;
 
     // Matériaux de base
-    const skin = new THREE.MeshBasicMaterial({ color: 0xffc0cb }); // rose clair
-    const green = new THREE.MeshBasicMaterial({ color: 0x00ff99 }); // vert techno
+    const skin = new THREE.MeshBasicMaterial({ color: 0xffc0cb });
+    const green = new THREE.MeshBasicMaterial({ color: 0x00ff99 }); 
 
     // Parties du corps
     this.head = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), skin);
