@@ -19,6 +19,10 @@ const VISUALIZERS = [
     name: "Cover",
     index: 3,
   },
+  {
+    name: "AnymaStyle",
+    index: 4,
+  }
 ];
 
 const Picker = () => {

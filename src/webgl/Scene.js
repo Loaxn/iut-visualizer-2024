@@ -17,6 +17,7 @@ import LogoIut from "./objects/LogoIut";
 import Cover from "./objects/Cover";
 import audioController from "../utils/AudioController";
 import Cube from "./objects/Cube";
+import AnymaStyle from "./objects/AnymaStyle";
 
 class Scene {
   constructor() {}
@@ -119,6 +120,7 @@ class Scene {
     this.board = new Board();
     this.logoIut = new LogoIut();
     this.cover = new Cover();
+    this.anymaStyle = new AnymaStyle();
     // this.cube = new Cube();
     // ....
 
@@ -194,13 +196,17 @@ class Scene {
         this.currentObject = this.logoIut;
         break;
       case 3:
-        // logo iut
         this.bloomParams.threshold = 0.6;
         this.bloomPass.threshold = 0.6;
-
         this.camera.position.z = 20;
         this.currentObject = this.cover;
         break;
+        case 4:
+      this.bloomParams.threshold = 0.4;
+      this.bloomPass.threshold = 0.4;
+      this.camera.position.z = 10; 
+      this.currentObject = this.anymaStyle;
+      break;
       default:
         break;
     }
