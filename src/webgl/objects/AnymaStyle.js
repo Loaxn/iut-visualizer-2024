@@ -65,7 +65,8 @@ export default class AnymaStyle {
   }
 
   update(time, deltaTime) {
-    if (audioController.bpm) {
+    if (audioController.bpm && !audioController.audio.paused) {
+      // Si le BPM est défini et l'audio est en lecture, utiliser le BPM pour l'animation
       this.count += deltaTime * 0.001;
 
       if (this.count > 60 / audioController.bpm) {
@@ -83,6 +84,13 @@ export default class AnymaStyle {
         this.restorePart(this.legL, this.originalPositions.legL);
         this.restorePart(this.legR, this.originalPositions.legR);
       }
+    } else if (audioController.audio.paused) {
+      // Si l'audio est en pause, ne pas mettre à jour count et ne pas effectuer de mouvement
+      this.restorePart(this.head, this.originalPositions.head);
+      this.restorePart(this.armL, this.originalPositions.armL);
+      this.restorePart(this.armR, this.originalPositions.armR);
+      this.restorePart(this.legL, this.originalPositions.legL);
+      this.restorePart(this.legR, this.originalPositions.legR);
     }
   }
 }
