@@ -1,31 +1,28 @@
 import { useEffect, useState } from "react";
-
 import Track from "../Track/Track";
 import useStore from "../../utils/store";
 import { fetchMetadata } from "../../utils/utils";
 import TRACKS from "../../utils/TRACKS";
-
 import fetchJsonp from "fetch-jsonp";
-
 import s from "./Tracks.module.scss";
 
 const Tracks = () => {
-  // permet d'alterner entre true et false pour afficher / cacher le composant
+  // Permet d'alterner entre true et false pour afficher/cacher le composant
   const [showTracks, setShowTracks] = useState(false);
   const { tracks, setTracks } = useStore();
 
-  // écouter la variable tracks qui vient du store
+  // Nouveau state pour gérer le loader
+  const [loading, setLoading] = useState(false);
+  
+  // Nouveau state pour l'artiste recherché
+  const [artist, setArtist] = useState("");
+
+  // Écouter la variable tracks qui vient du store
   useEffect(() => {
     if (tracks.length > TRACKS.length) {
       setShowTracks(true);
     }
   }, [tracks]);
-
-  // TODO : Slider (infini ou non) pour sélectionner les tracks
-
-  // TODO : Fonction de tri / filtre sur les tracks, par nom, durée...
-
-  // TODO : Récupérer les tracks du store
 
   useEffect(() => {
     fetchMetadata(TRACKS, tracks, setTracks);
@@ -33,15 +30,16 @@ const Tracks = () => {
 
   const onKeyDown = (e) => {
     if (e.keyCode === 13 && e.target.value !== "") {
-      // l'utilisateur a appuyé sur sa touche entrée
+      // L'utilisateur a appuyé sur la touche Entrée
       const userInput = e.target.value;
-
-      // appeler la fonction
+      setArtist(userInput);  // Mise à jour de l'artiste recherché
       getSongs(userInput);
     }
   };
 
   const getSongs = async (userInput) => {
+    setLoading(true); // Affiche le loader avant la requête
+
     let response = await fetchJsonp(
       `https://api.deezer.com/search?q=${userInput}&output=jsonp`
     );
@@ -49,21 +47,23 @@ const Tracks = () => {
     if (response.ok) {
       response = await response.json();
 
-      // récupérer le tableau de tracks du store existant
+      // Récupérer le tableau de tracks du store existant
       const _tracks = [...tracks];
 
-      // pour chaque track renvoyée par l'API
+      // Pour chaque track renvoyée par l'API
       response.data.forEach((result) => {
-        _tracks.push(result);
+        // remplacer push par unshift pour avoir les resulatst en haut
+        _tracks.unshift(result);
       });
 
-      // màj le store
+      // Mise à jour du store
       setTracks(_tracks);
-
-      console.log(_tracks);
     } else {
-      // erreurs
+      // Erreurs
+      console.error("Erreur de recherche");
     }
+
+    setLoading(false); // Cacher le loader après la requête
   };
 
   return (
@@ -76,10 +76,11 @@ const Tracks = () => {
       </div>
 
       <section
-        className={`
-      ${s.wrapper}
-      ${showTracks ? s.wrapper_visible : ""}`}
+        className={`${s.wrapper} ${showTracks ? s.wrapper_visible : ""}`}
       >
+        {/* Affichage de l'artiste recherché en haut */}
+        {artist && <div className={s.artistName}>Artiste : {artist}</div>}
+
         <div className={s.tracks}>
           <div className={s.header}>
             <span className={s.order}>#</span>
@@ -93,12 +94,18 @@ const Tracks = () => {
               title={track.title}
               duration={track.duration}
               cover={track.album.cover_xl}
-              // artists={track.artists}
               src={track.preview}
               index={i}
             />
           ))}
         </div>
+
+        {/* Affichage du loader pendant la recherche */}
+        {loading && (
+          <div className={s.loader}>
+            <div className={s.spinner}></div> 
+          </div>
+        )}
 
         <input
           type="text"
