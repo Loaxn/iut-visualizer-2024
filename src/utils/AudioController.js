@@ -2,9 +2,7 @@ import gsap from "gsap";
 import detect from "bpm-detective";
 
 class AudioController {
-  constructor() {
-    this.isPlaying = false;  // Ajouter un flag pour savoir si la musique joue
-  }
+  constructor() {}
 
   setup() {
     this.ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -34,32 +32,20 @@ class AudioController {
       await this.detectBPM();
       // console.log(`The BPM is: ${bpm}`);
     });
-
-    this.audio.addEventListener("play", () => {
-      this.isPlaying = true;  // Musique commence à jouer
-    });
-
-    this.audio.addEventListener("pause", () => {
-      this.isPlaying = false;  // Musique est en pause
-    });
-
-    this.audio.addEventListener("ended", () => {
-      this.isPlaying = false;  // Musique terminée
-    });
   }
 
   detectBPM = async () => {
-    // Créer un contexte audio hors ligne pour traiter les données
+    // Create an offline audio context to process the data
     const offlineCtx = new OfflineAudioContext(
       1,
       this.audio.duration * this.ctx.sampleRate,
       this.ctx.sampleRate
     );
-    // Décoder les données audio actuelles
-    const response = await fetch(this.audio.src); // Charger le fichier audio
+    // Decode the current audio data
+    const response = await fetch(this.audio.src); // Fetch the audio file
     const buffer = await response.arrayBuffer();
     const audioBuffer = await offlineCtx.decodeAudioData(buffer);
-    // Utiliser bpm-detective pour détecter le BPM
+    // Use bpm-detective to detect the BPM
     this.bpm = detect(audioBuffer);
     console.log(`Detected BPM: ${this.bpm}`);
     // return bpm;

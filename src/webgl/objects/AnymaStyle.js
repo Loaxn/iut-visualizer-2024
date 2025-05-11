@@ -65,8 +65,7 @@ export default class AnymaStyle {
   }
 
   update(time, deltaTime) {
-    // Vérifie si la musique est en train de jouer
-    if (audioController.isPlaying) {
+    if (audioController.bpm) {
       this.count += deltaTime * 0.001;
 
       if (this.count > 60 / audioController.bpm) {
@@ -84,13 +83,6 @@ export default class AnymaStyle {
         this.restorePart(this.legL, this.originalPositions.legL);
         this.restorePart(this.legR, this.originalPositions.legR);
       }
-    } else {
-      // Si la musique ne joue pas, on arrête les animations du personnage
-      this.restorePart(this.head, this.originalPositions.head);
-      this.restorePart(this.armL, this.originalPositions.armL);
-      this.restorePart(this.armR, this.originalPositions.armR);
-      this.restorePart(this.legL, this.originalPositions.legL);
-      this.restorePart(this.legR, this.originalPositions.legR);
     }
   }
 }
