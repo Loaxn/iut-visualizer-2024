@@ -46,3 +46,16 @@
     }
   }
 }
+
+.playPauseButton {
+  font-size: 2rem; 
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: #fff; 
+}
+
+.playPauseButton i {
+  display: inline-block;
+}

@@ -52,8 +52,20 @@ class AudioController {
   };
 
   play = (src) => {
-    this.audio.src = src;
-    this.audio.play();
+    if (this.audio.paused) {
+      this.audio.src = src;
+      this.audio.play();
+    } else {
+      console.log('Audio already playing.');
+    }
+  };
+
+  pause = () => {
+    if (!this.audio.paused) {
+      this.audio.pause();
+    } else {
+      console.log('Audio is already paused.');
+    }
   };
 
   tick = () => {
